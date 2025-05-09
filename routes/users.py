@@ -6,6 +6,8 @@ from auth import auth
 from datetime import datetime, timedelta
 from models import User, PasswordResetToken, StoredjwtToken
 from toolz import random_username, generate_random_image, send_email, is_valid_email, random_generator
+from werkzeug.utils import secure_filename
+
 
 # signup user
 @app.route('/signup', methods=['POST'])
@@ -32,8 +34,11 @@ def sign_up():
     
     # Generate random image and save it 
     image_filename = f"{username}.png"
-    image_path = os.path.join('static', 'images', image_filename)
+    image_path = os.path.join('static/uploads', image_filename)
     generate_random_image(image_path)
+    
+    # create folder if not exits
+    # os.makedirs(image_path, exist_ok=True)
     
     # save to database
     new_user = User(email=email,username=username, image=image_filename)

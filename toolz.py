@@ -1,3 +1,4 @@
+
 import re
 import string
 import random
@@ -46,3 +47,4 @@ def send_email(subject, receiver, text_body, html_body):
     msg.body = text_body
     msg.html = html_body
     mail.send(msg)
+

@@ -12,7 +12,9 @@ class User(db.Model):
     password_hash =  db.Column(db.String(200), nullable=False)
     image = db.Column(db.String(120), nullable=True)
     create = db.Column(db.DateTime, default=datetime.now)
-    last_image_update = db.Column(db.DateTime, default=datetime.utcnow)    
+    last_image_update = db.Column(db.DateTime, default=datetime.utcnow) 
+    posts = relationship("Post", back_populates="user", lazy=True) 
+    comments = relationship("Comment", back_populates="user", lazy=True)
     # works with getting the user profile
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -66,4 +68,29 @@ class StoredjwtToken(db.Model):
     jwt_token = db.Column(db.String(255), unique=True, nullable=True)
     user_id = db.Column(db.Integer, nullable=True)
     
+
+# post
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post = db.Column(db.String(3000), nullable=False)
+    post_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    user = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="post", lazy=True)
+    def __repr__(self):
+        return f"<id {self.id}>"
+    
+    
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.String(1000), nullable=False)
+    comment_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    
+    post = relationship("Post", back_populates="comments")
+    user = relationship("User", back_populates="comments")
+    
+    def __repr__(self):
+        return f"<Comment {self.id}>"
     
