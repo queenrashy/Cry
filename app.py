@@ -11,3 +11,5 @@ db = SQLAlchemy(app=app)
 migrate = Migrate(app=app, db=db)
 mail = Mail(app)
 cors = CORS(resources={r"/*": {"origins": "*"}}, app=app)
+
+from routes import users

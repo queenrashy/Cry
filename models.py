@@ -7,14 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    email =  db.Column(db.String(200), unique=True)
-    phone =  db.Column(db.String(20))
-    password_hash =  db.Column(db.String(200))
+    email =  db.Column(db.String(200), unique=True, nullable=False)
+    username = db.Column(db.String(200), unique=True, nullable=False)
+    password_hash =  db.Column(db.String(200), nullable=False)
+    image = db.Column(db.String(120), nullable=True)
     create = db.Column(db.DateTime, default=datetime.now)
-    domains = relationship("Domains", back_populates="user")
-    
+    last_image_update = db.Column(db.DateTime, default=datetime.utcnow)    
     # works with getting the user profile
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
